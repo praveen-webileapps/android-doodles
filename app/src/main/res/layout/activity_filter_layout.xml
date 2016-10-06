@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:background="@android:color/holo_orange_light"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="50px"
+        android:layout_marginBottom="50px"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+
+        <com.android.mydoodles.CircularTextLayout
+            android:id="@+id/statusFilterLayout"
+            android:layout_gravity="bottom|end"
+            android:layout_width="210dp"
+            android:layout_height="210dp"/>
+
+        <com.android.mydoodles.CircularTextLayout
+            android:id="@+id/paidFilterLayout"
+            android:layout_gravity="bottom|end"
+            android:layout_width="150dp"
+            android:layout_height="150dp"/>
+
+
+    </FrameLayout>
+
+</RelativeLayout>
