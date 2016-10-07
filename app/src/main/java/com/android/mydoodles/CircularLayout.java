@@ -99,7 +99,7 @@ public class CircularLayout extends ViewGroup {
         canvas.save();
         Paint paint = new Paint();
         paint.setStyle(Paint.Style.STROKE);
-        paint.setColor(Color.argb(50, 0, 0, 0));
+        paint.setColor(Color.argb(30, 0, 0, 0));
         paint.setStrokeWidth(pathWidth);
         //paint.setStyle(Paint.Style.FILL_AND_STROKE);
         canvas.drawArc(bgRect, 0, 360, false, paint);
@@ -249,6 +249,8 @@ public class CircularLayout extends ViewGroup {
             if (radius < viewSize && radius > viewInnerRadius) {
 
                 float delta = getDelta(velocityX, velocityY, viewSize - e2.getX(), viewSize - e2.getY());
+
+                System.out.println("Velocity " + delta);
 
                 mScroller.fling(
                         0,

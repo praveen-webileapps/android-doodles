@@ -53,7 +53,7 @@ public class CircularTextView extends View {
         super(context, attrs, defStyleAttr);
         paint = new Paint();
         path = new Path();
-        paint.setColor(Color.MAGENTA);
+        paint.setColor(Color.WHITE);
         defaultStrokeWidth = paint.getStrokeWidth();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -132,7 +132,7 @@ public class CircularTextView extends View {
         }
 
 
-        paint.setColor(Color.MAGENTA);
+        paint.setColor(Color.WHITE);
         paint.setStrokeWidth(defaultStrokeWidth);
 
         canvas.drawTextOnPath(text, path, 0, vOffset, paint);

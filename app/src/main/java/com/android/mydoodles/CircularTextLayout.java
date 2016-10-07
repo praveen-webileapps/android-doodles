@@ -54,6 +54,7 @@ public class CircularTextLayout extends ViewGroup {
         super(context, attrs, defStyleAttr);
         setStaticTransformationsEnabled(true);
         pathPadding = MyViewUtils.dpToPx(20);
+        bgRect = new RectF();
     }
 
     private void initDimensions(int segments) {
@@ -180,7 +181,7 @@ public class CircularTextLayout extends ViewGroup {
 
         childPivotY = tv.getOuterRadius() - tv.getPathRadius();
 
-        bgRect = new RectF(0, 0, 2 * layoutSize, 2 * layoutSize);
+        bgRect.set(0, 0, 2 * layoutSize, 2 * layoutSize);
 
         bgRect.inset(layoutSize - tv.getPathRadius(), layoutSize - tv.getPathRadius());
 
