@@ -8,8 +8,11 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -23,7 +26,7 @@ public class DemoActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setCircularViewDemo();
-        //setCirclularLayout();
+        //setCircularLayout();
         //setAnimationDemo();
         //setCircularTextView();
         // setCircularTextLayout();
@@ -38,20 +41,12 @@ public class DemoActivity extends Activity {
 
         typeface = Typeface.createFromAsset(getResources().getAssets(), "BalooThambi-Regular.ttf");
 
-        CircularTextLayout paidFilterLayouts = (CircularTextLayout) findViewById(R.id.paidFilterLayout);
-        CircularTextLayout.Adapter adapterOne = getAdapter(new String[] {"Paid", "Unpaid"});
-        paidFilterLayouts.setAdapter(adapterOne);
+        FilterLayout filterLayout = (FilterLayout) findViewById(R.id.filterLayout);
 
-        CircularTextLayout streamStatusFilterLayout = (CircularTextLayout) findViewById(R.id.statusFilterLayout);
-        CircularTextLayout.Adapter adapterTwo = getAdapter(new String[] {"Live","Recorded", "Scheduled"});
-        streamStatusFilterLayout.setAdapter(adapterTwo);
+        filterLayout.setPaidLayoutAdapter(getAdapter(new String[] {"Paid", "Unpaid"}));
+        filterLayout.setStreamStatusAdapter(getAdapter(new String[] {"Live","Recorded", "Scheduled"}));
 
-        float fontOne = CircularTextLayout.getRecommendedFont(adapterOne, typeface, paidFilterLayouts.getLayoutParams().height);
-        float fontTwo = CircularTextLayout.getRecommendedFont(adapterTwo, typeface, streamStatusFilterLayout.getLayoutParams().height);
-        float fontSize = Math.min(fontOne,fontTwo);
-
-        paidFilterLayouts.setFontSize(fontSize);
-        streamStatusFilterLayout.setFontSize(fontSize);
+        filterLayout.setGenreFilterAdapter(getGenreFilterAdapter());
 
     }
 
@@ -116,9 +111,6 @@ public class DemoActivity extends Activity {
         return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
     }
 
-
-
-
     private float getFontSize(float width, Rect r) {
         int textWidth = r.right - r.left;
         return width / textWidth * BASE_FONT;
@@ -141,15 +133,60 @@ public class DemoActivity extends Activity {
     }
 
 
-    private void setCirclularLayout() {
+    private void setCircularLayout() {
         setContentView(R.layout.activity_circular_layout);
-        View circle = findViewById(R.id.circular_layout);
+
+        CircularLayout layout = (CircularLayout) findViewById(R.id.circular_layout);
+
+        layout.setAdapter(getGenreFilterAdapter());
+
 //        circle.setPivotX(0);
 //        circle.setPivotY(0);
 
 //        circle.setTranslationX(circle.getWidth());
 //        circle.setTranslationY(circle.getHeight());
 
+    }
+
+    private CircularLayout.Adapter getGenreFilterAdapter() {
+        return new CircularLayout.Adapter() {
+            @Override
+            public View getView(int index, ViewGroup parent) {
+                View v =  LayoutInflater.from(getApplicationContext()).inflate(R.layout.genre_layout, parent, false);
+
+                ImageView imageView = (ImageView) v.findViewById(R.id.image);
+                TextView tv = (TextView) v.findViewById(R.id.description);
+
+                switch (index % 3) {
+
+                    case 0:
+                        imageView.setImageResource(R.drawable.ic_invert_colors_white_36dp);
+                        tv.setText("General");
+                        break;
+                    case 1:
+                        imageView.setImageResource(R.drawable.ic_language_white_36dp);
+                        tv.setText("Science");
+                        break;
+                    case 2:
+                        imageView.setImageResource(R.drawable.ic_opacity_white_36dp);
+                        tv.setText("Adventure");
+                        break;
+
+                }
+
+                return v;
+            }
+
+            @Override
+            public int getCount() {
+                return 10;
+            }
+
+            @Override
+            public View.OnClickListener getOnClickListener(int index) {
+                return null;
+            }
+        };
     }
 
     public void animate(View v) {
@@ -162,6 +199,18 @@ public class DemoActivity extends Activity {
         //circle.setVisibility(View.VISIBLE);
 
         circle.animate().scaleX(tx).scaleY(ty).start();
+    }
+
+    public void animateFilter(View v) {
+
+        final View filterLayout = findViewById(R.id.filterLayout);
+
+        int tx = filterLayout.getScaleX() == 0 ? 1 : 0;
+        int ty = filterLayout.getScaleY() == 0 ? 1 : 0;
+
+        //circle.setVisibility(View.VISIBLE);
+
+        filterLayout.animate().scaleX(tx).scaleY(ty).start();
     }
 
     private void setCircularViewDemo() {

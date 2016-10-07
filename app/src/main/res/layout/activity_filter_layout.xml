@@ -4,28 +4,29 @@
     android:background="@android:color/holo_orange_light"
     android:layout_height="match_parent">
 
-    <FrameLayout
+    <Button
+        android:text="Animate"
+        android:layout_margin="20dp"
+        android:padding="10dp"
+        android:onClick="animateFilter"
+        android:id="@+id/btn"
+        android:textColor="@android:color/white"
+        android:background="@android:color/holo_blue_light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+    <com.android.mydoodles.FilterLayout
+        android:id="@+id/filterLayout"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_marginRight="50px"
         android:layout_marginBottom="50px"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-
-        <com.android.mydoodles.CircularTextLayout
-            android:id="@+id/statusFilterLayout"
-            android:layout_gravity="bottom|end"
-            android:layout_width="210dp"
-            android:layout_height="210dp"/>
-
-        <com.android.mydoodles.CircularTextLayout
-            android:id="@+id/paidFilterLayout"
-            android:layout_gravity="bottom|end"
-            android:layout_width="150dp"
-            android:layout_height="150dp"/>
-
-
-    </FrameLayout>
+        android:scaleX="0"
+        android:scaleY="0"
+        android:transformPivotX="300dp"
+        android:transformPivotY="300dp"
+        android:layout_width="300dp"
+        android:layout_height="300dp"/>
 
 </RelativeLayout>

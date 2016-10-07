@@ -10,6 +10,7 @@ import android.support.v4.view.GestureDetectorCompat;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.Scroller;
@@ -34,6 +35,14 @@ public class CircularLayout extends ViewGroup {
     private float maxRotation;
     private RectF bgRect;
     private float pathWidth;
+    private Adapter mAdapter;
+    private int selectedIndex;
+
+    interface Adapter {
+        View getView(int index, ViewGroup parent);
+        int getCount();
+        OnClickListener getOnClickListener(int index);
+    }
 
     public CircularLayout(Context context) {
         this(context, null);
@@ -57,12 +66,8 @@ public class CircularLayout extends ViewGroup {
         });
 
         mDetector = new GestureDetectorCompat(getContext(), new GestureListener());
+        bgRect = new RectF();
 
-    }
-
-    @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
     }
 
     @Override
@@ -83,14 +88,9 @@ public class CircularLayout extends ViewGroup {
 
         pathWidth = viewSize - viewInnerRadius;
 
-        bgRect = new RectF(0, 0, 2 * viewSize, 2 * viewSize);
+        bgRect.set(0, 0, 2 * viewSize, 2 * viewSize);
         bgRect.inset(pathWidth / 2, pathWidth / 2);
 
-    }
-
-    @Override
-    public void requestLayout() {
-        super.requestLayout();
     }
 
     @Override
@@ -141,6 +141,30 @@ public class CircularLayout extends ViewGroup {
 
     }
 
+    public float getPathWidth() {
+        return pathWidth;
+    }
+
+    public void setAdapter(CircularLayout.Adapter adapter) {
+
+        removeAllViews();
+        View childView;
+        mAdapter = adapter;
+
+        for (int i = 0; i < adapter.getCount(); i++) {
+
+            childView = adapter.getView(i, this);
+
+            if (selectedIndex == i) {
+                childView.setSelected(true);
+            }
+
+            addView(childView);
+        }
+
+        requestLayout();
+    }
+
     private boolean isAnimationRunning() {
         return !mScroller.isFinished();
     }
@@ -149,14 +173,59 @@ public class CircularLayout extends ViewGroup {
         mScroller.forceFinished(true);
     }
 
-    class GestureListener extends GestureDetector.SimpleOnGestureListener {
 
-        private float getRadius(float x, float y) {
-            return (float) Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
-        }
+//    public int getChildIndexContainingPoint(int x, int y) {
+//
+//        float pointDistance = getRadius(x, y);
+//
+//        if (pointDistance < viewSize && pointDistance > viewInnerRadius) {
+//
+//            int startIndex, endIndex;
+//
+//            startIndex = (int) (currentRotation / segmentAngle);
+//            endIndex = currentRotation;
+//
+//
+//
+//        }
+//    }
+
+    private float getRadius(float x, float y) {
+        return (float) Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+    }
+
+    class GestureListener extends GestureDetector.SimpleOnGestureListener {
 
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
+
+//            float radius = getRadius(viewSize - e.getX(), viewSize - e.getY());
+//
+//            if (radius < viewSize && radius > viewInnerRadius) {
+//
+//                float angleRadians = (float) Math.toRadians(Math.atan2(viewSize - e.getY(), viewSize - e.getX()));
+//
+//                int index = getChildIndexOfRotation(angleRadians + currentRotation);
+//
+//                if (selectedIndex == index)
+//                    return false;
+//
+//                getChildAt(selectedIndex).setSelected(false);
+//
+//                selectedIndex = index;
+//
+//                v.setSelected(!v.isSelected());
+//
+//                if (mAdapter.getOnClickListener(selectedIndex) != null) {
+//                    mAdapter.getOnClickListener(selectedIndex).onClick(v);
+//                }
+//
+//                requestLayout();
+//
+//                return true;
+//
+//            }
+
             return super.onSingleTapConfirmed(e);
         }
 
@@ -224,7 +293,7 @@ public class CircularLayout extends ViewGroup {
 
     public void setRotation(float rotation) {
         this.currentRotation = rotation;
-        android.util.Log.v("Rotation", "" + currentRotation);
+        //android.util.Log.v("Rotation", "" + currentRotation);
         requestLayout();
     }
 

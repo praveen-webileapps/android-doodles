@@ -60,6 +60,11 @@ public class CircularTextLayout extends ViewGroup {
         segmentAngle = 90f / segments;
     }
 
+
+    public Adapter getAdapter() {
+        return mAdapter;
+    }
+
     public void setAdapter(Adapter adapter) {
 
         removeAllViews();
@@ -137,18 +142,21 @@ public class CircularTextLayout extends ViewGroup {
     }
 
 
-    private float layoutSize, fontSize = BASE_FONT;
+    private float layoutSize;
 
 
     public void setFontSize(float fontSize) {
-        this.fontSize = fontSize;
+        for (int i = 0; i < getChildCount(); i++) {
+            tv = (CircularTextView) getChildAt(i);
+            tv.setFont(fontSize);
+        }
     }
 
     private void setChildDimensions() {
 
         for (int i = 0; i < getChildCount(); i++) {
             tv = (CircularTextView) getChildAt(i);
-            tv.setFont(fontSize).setCurvature(segmentAngle).setPathPadding(pathPadding).setOuterRadius(layoutSize);
+            tv.setCurvature(segmentAngle).setPathPadding(pathPadding).setOuterRadius(layoutSize);
         }
     }
 
@@ -180,6 +188,10 @@ public class CircularTextLayout extends ViewGroup {
 
     }
 
+
+    public float getBgStrokeWidth() {
+        return bgStrokeWidth;
+    }
 
     @Override
     protected void dispatchDraw(Canvas canvas) {

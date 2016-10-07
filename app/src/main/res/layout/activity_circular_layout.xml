@@ -26,70 +26,7 @@
         android:transformPivotY="300dp"
         android:layout_alignParentBottom="true"
         android:layout_width="300dp"
-        android:layout_height="300dp">
-
-
-        <View
-            android:background="@android:color/holo_purple"
-            android:layout_width="40dp"
-            android:layout_height="40dp"/>
-
-
-        <View
-            android:background="@android:color/holo_purple"
-            android:layout_width="40dp"
-            android:layout_height="40dp"/>
-
-
-        <View
-            android:background="@android:color/holo_purple"
-            android:layout_width="40dp"
-            android:layout_height="40dp"/>
-
-
-        <View
-            android:background="@android:color/holo_purple"
-            android:layout_width="40dp"
-            android:layout_height="40dp"/>
-
-
-        <View
-            android:background="@android:color/holo_purple"
-            android:layout_width="40dp"
-            android:layout_height="40dp"/>
-
-        <View
-            android:background="@android:color/holo_purple"
-            android:layout_width="40dp"
-            android:layout_height="40dp"/>
-
-
-        <View
-            android:background="@android:color/holo_purple"
-            android:layout_width="40dp"
-            android:layout_height="40dp"/>
-
-
-        <View
-            android:background="@android:color/holo_purple"
-            android:layout_width="40dp"
-            android:layout_height="40dp"/>
-
-
-        <View
-            android:background="@android:color/holo_purple"
-            android:layout_width="40dp"
-            android:layout_height="40dp"/>
-
-
-        <View
-            android:background="@android:color/holo_purple"
-            android:layout_width="40dp"
-            android:layout_height="40dp"/>
-
-
-    </com.android.mydoodles.CircularLayout>
-
+        android:layout_height="300dp"/>
 
 
 </RelativeLayout>
