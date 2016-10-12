@@ -22,7 +22,7 @@ public class CircularLayout extends ViewGroup {
 
     public static final float scaler = 10000f;
     private final GestureDetectorCompat mDetector;
-    private int childSize;
+    private float childSize;
     private float radius;
     private final float segmentAngle = 90f / 4;
     private float currentRotation = 0;
@@ -40,7 +40,9 @@ public class CircularLayout extends ViewGroup {
 
     interface Adapter {
         View getView(int index, ViewGroup parent);
+
         int getCount();
+
         OnClickListener getOnClickListener(int index);
     }
 
@@ -122,20 +124,27 @@ public class CircularLayout extends ViewGroup {
         return mDetector.onTouchEvent(event);
     }
 
-    int cx, cy;
-    float cTheta;
+    float cx, cy;
+    double cTheta;
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
 
+        int cLeft, cTop, cRight, cBottom;
+
         for (int i = 0; i < getChildCount(); i++) {
 
-            cTheta = (float) Math.toRadians(segmentAngle * i + segmentAngle / 2 - currentRotation);
+            cTheta = Math.toRadians(segmentAngle * i + segmentAngle / 2 - currentRotation);
 
-            cx = (int) (viewSize - radius * Math.cos(cTheta));
-            cy = (int) (viewSize - radius * Math.sin(cTheta));
+            cx = (float) (viewSize - radius * Math.cos(cTheta));
+            cy = (float) (viewSize - radius * Math.sin(cTheta));
 
-            getChildAt(i).layout(cx - childSize / 2, cy - childSize / 2, cx + childSize / 2, cy + childSize / 2);
+            cLeft = (int) (cx - childSize / 2);
+            cRight = (int) (cx + childSize / 2);
+            cTop = (int) (cy - childSize / 2);
+            cBottom = (int) (cy + childSize / 2);
+
+            getChildAt(i).layout(cLeft, cTop, cRight, cBottom);
 
         }
 
@@ -154,6 +163,8 @@ public class CircularLayout extends ViewGroup {
         for (int i = 0; i < adapter.getCount(); i++) {
 
             childView = adapter.getView(i, this);
+
+            childView.setBackground(getResources().getDrawable(R.drawable.genre_view_bg));
 
             if (selectedIndex == i) {
                 childView.setSelected(true);
@@ -174,21 +185,43 @@ public class CircularLayout extends ViewGroup {
     }
 
 
-//    public int getChildIndexContainingPoint(int x, int y) {
-//
-//        float pointDistance = getRadius(x, y);
-//
-//        if (pointDistance < viewSize && pointDistance > viewInnerRadius) {
-//
-//            int startIndex, endIndex;
-//
-//            startIndex = (int) (currentRotation / segmentAngle);
-//            endIndex = currentRotation;
-//
-//
-//
-//        }
-//    }
+    public int getChildIndexContainingPoint(float x, float y) {
+
+        float pointDistance = getRadius(x, y);
+
+        if (pointDistance < viewSize && pointDistance > viewInnerRadius) {
+
+            int startIndex, endIndex;
+
+            startIndex = (int) (currentRotation / segmentAngle);
+            endIndex = (int) Math.ceil(currentRotation + 90f / segmentAngle);
+
+            double childCentreAngle, childCentreRadians;
+            double cx, cy;
+
+            double boxLeft, boxRight, boxTop, boxBottom;
+
+
+            for (int i = startIndex; i < endIndex; i++) {
+
+                childCentreAngle = i * segmentAngle + segmentAngle / 2 - currentRotation;
+                childCentreRadians = Math.toRadians(childCentreAngle);
+
+                cx = radius * Math.cos(childCentreRadians);
+                cy = radius * Math.sin(childCentreRadians);
+
+                boxLeft = cx - childSize / 2;
+                boxRight = cx + childSize / 2;
+                boxTop = cy - childSize / 2;
+                boxBottom = cy + childSize / 2;
+
+                if (x < boxRight && x > boxLeft && y < boxBottom && y > boxTop)
+                    return i;
+            }
+        }
+
+        return -1;
+    }
 
     private float getRadius(float x, float y) {
         return (float) Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
@@ -197,36 +230,30 @@ public class CircularLayout extends ViewGroup {
     class GestureListener extends GestureDetector.SimpleOnGestureListener {
 
         @Override
-        public boolean onSingleTapConfirmed(MotionEvent e) {
+        public boolean onSingleTapUp(MotionEvent e) {
 
-//            float radius = getRadius(viewSize - e.getX(), viewSize - e.getY());
-//
-//            if (radius < viewSize && radius > viewInnerRadius) {
-//
-//                float angleRadians = (float) Math.toRadians(Math.atan2(viewSize - e.getY(), viewSize - e.getX()));
-//
-//                int index = getChildIndexOfRotation(angleRadians + currentRotation);
-//
-//                if (selectedIndex == index)
-//                    return false;
-//
-//                getChildAt(selectedIndex).setSelected(false);
-//
-//                selectedIndex = index;
-//
-//                v.setSelected(!v.isSelected());
-//
-//                if (mAdapter.getOnClickListener(selectedIndex) != null) {
-//                    mAdapter.getOnClickListener(selectedIndex).onClick(v);
-//                }
-//
-//                requestLayout();
-//
-//                return true;
-//
-//            }
+            int index = getChildIndexContainingPoint(viewSize - e.getX(), viewSize - e.getY());
 
-            return super.onSingleTapConfirmed(e);
+            if (index == -1)
+                return false;
+
+            if (selectedIndex == index)
+                return false;
+
+            getChildAt(selectedIndex).setSelected(false);
+
+            selectedIndex = index;
+
+            getChildAt(selectedIndex).setSelected(true);
+
+            if (mAdapter.getOnClickListener(selectedIndex) != null) {
+                mAdapter.getOnClickListener(selectedIndex).onClick(getChildAt(selectedIndex));
+            }
+
+            requestLayout();
+
+            return true;
+
         }
 
 
